@@ -61,7 +61,7 @@ class DBProc
         if (isset($instance)) {
             return $instance;
         }
-        $instance = new static;
+        $instance = new self;
         return $instance;
     }
 
@@ -172,6 +172,7 @@ class DBProc
 
     public function insert($table, $parent_id = Array(), $id = false)
     {
+        $this->construct();
         $table =  $table;
         $coma = "";
 
@@ -187,15 +188,18 @@ class DBProc
         }
         $sql = "INSERT INTO `$table` ($keys) VALUES ($values)";
         try {
-            if (!$this->pdo->inTransaction()) {
+            /*if (!$this->pdo->inTransaction()) {
                 $this->pdo->beginTransaction();
-            }
+            }*/
             $query = $this->pdo->prepare($sql);
+
+
             if ($query->execute($exec)) {
                 $return_id = $this->pdo->lastInsertId();
             }
         } catch (\PDOException $e) {
             //$this->pdo->rollBack();
+            echo $e->getMessage();
             if (!file_exists("sql_errors.php")) {
                 echo " ERROR ".$e->getMessage();
                 //echo $sql;

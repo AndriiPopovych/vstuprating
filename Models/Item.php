@@ -8,13 +8,13 @@
 
 class Item  extends \Balon\System\iDBable{
 
-    public $table;
+    protected $table = "items";
 
     public $idItem;
     public $description;
     public $link;
     public $zno;
     public $idVNZ;
-    public $a;
-    public $b;
+    public $licensedVolume;
+    public $governmentOrder;
 }

@@ -61,29 +61,34 @@ class Parser {
 
     public function parseConcreteUniversity() {
         echo "Hello";
-        $db = \Balon\DBProc::instance();
-        $university =  $db->select("university", false, ["link" => "./i2015i174.html#vnz"])[0];
-        print_r($university);
-        $content = file_get_contents($this->url .$this->year."/./i2015i174.html#vnz");
-        preg_match_all("/<div.*id=\"den-". $university['code'] ."\".*>(.*)<\/div>/Uis", $content, $div);
-        $div = $div[1][0];
-        preg_match_all("/<ul.*id=\"myTab\">.*<li.*>.*<a href=\"#(.*)\".*>бакалавр.*<\/a>/Uis", $div, $ul);
-        $idTab = $ul[1][0];
-        preg_match_all("/<div.*id=\"$idTab\">.*<tbody>(.*)<\/tbody>/is", $div, $tbody);
-//        echo $tbody[1][0];
-        preg_match_all("/(<tr>.*<\/tr>)/Uis", $tbody[1][0], $trArray);
-        foreach ($trArray[1] as $key => $tr) {
-            preg_match_all("/<td>(.*)<\/td>/Uis", $tr, $td);
-            $item = new Item();
-            $item->idVNZ = $university->idUniversity;
-            $item->description = $td[1][0];
-            preg_match_all("", )
-            $item->a = $td[1][2];
-            $item->b = $td[1][3];
-            $item->idVNZ = $td[1][4];
-            print_r($td[1]);
-            die();
+        $db_new = \Balon\DB::instance();
+        //$db = \Balon\DBProc::instance();
+        //$university = $db->select("university", false, ["link" => "./i2015i174.html#vnz"])[0];
+        $universities = $db_new->parentSelect("university");
+        $u = 0;
+        foreach ($universities as $university) {
+            echo "Start parsing university number # $u \n";
+            $u++;
+            $content = file_get_contents($this->url . $this->year . "/" . $university['link']);
+            preg_match_all("/<div.*id=\"den-" . $university['code'] . "\".*>(.*)<\/div>/Uis", $content, $div);
+            $div = $div[1][0];
+            preg_match_all("/<ul.*id=\"myTab\">.*<li.*>.*<a href=\"#(.*)\".*>бакалавр.*<\/a>/Uis", $div, $ul);
+            $idTab = $ul[1][0];
+            preg_match_all("/<div.*id=\"$idTab\">.*<tbody>(.*)<\/tbody>/is", $div, $tbody);
+            preg_match_all("/(<tr>.*<\/tr>)/Uis", $tbody[1][0], $trArray);
+            foreach ($trArray[1] as $key => $tr) {
+                preg_match_all("/<td>(.*)<\/td>/Uis", $tr, $td);
+                $item = new Item();
+                $item->idVNZ = $university['idUniversity'];
+                $item->description = $td[1][0];
+                preg_match_all("/.*<a.*href=\"(.*)\">/", $td[1][1], $link);
+                $item->link = $link[1][0];
+                $item->licensedVolume = $td[1][2];
+                $item->governmentOrder = $td[1][3];
+                $item->zno = $td[1][4];
+                $db_new->insert($item);
+                echo "Hi";
+            }
         }
-        print_r ($trArray[1]);
     }
 }

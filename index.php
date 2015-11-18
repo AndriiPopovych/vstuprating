@@ -1,5 +1,5 @@
 <?php
-error_reporting(2);
+//error_reporting(2);
 function __autoload($className) {
     $classList = explode("\\", $className);
     $className = end($classList);
@@ -10,7 +10,6 @@ function __autoload($className) {
         include_once "system/$className.php";
     }
 }
-
 $parser = new Parser();
 //$parser->parseFields();
 //$parser->parseUniversity();

@@ -63,6 +63,11 @@ class DB extends DBProc{
         }
     }
 
+    public function parentSelect($table, $what = false, $where = Array(), $order = false, $ASC = false, $limit = [])
+    {
+        return parent::select($table, $what, $where, $order, $ASC, $limit );
+    }
+
     public function getObject(iDBable &$object)
     {
         $table = $object->getTable();
