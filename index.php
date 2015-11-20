@@ -1,5 +1,6 @@
 <?php
-//error_reporting(2);
+error_reporting(2);
+session_start();
 function __autoload($className) {
     $classList = explode("\\", $className);
     $className = end($classList);
@@ -13,4 +14,5 @@ function __autoload($className) {
 $parser = new Parser();
 //$parser->parseFields();
 //$parser->parseUniversity();
-$parser->parseConcreteUniversity();
+//$parser->parseConcreteUniversity();
+$parser->cleanData();
