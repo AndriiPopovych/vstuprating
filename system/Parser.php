@@ -135,6 +135,23 @@ class Parser {
 
     public function cleanData()
     {
-
+        echo "Hello\n";
+        $db = \Balon\DB::instance();
+        $cond = $db->parentSelect("competition", false, false, false, false, [50000,30000]);
+        $result = [];
+        foreach ($cond as $key => $val) {
+            preg_match_all("/title=\"(.*)\"/Uis", $val['zno'], $array);
+            foreach ($array[1] as $k => $v) {
+                if (!in_array($v, $result)) {
+                    $result[] = $v;
+                }
+            }
+        }
+        foreach ($result as $value) {
+            $zno = new ZNO();
+            $zno->name = $value;
+            $db->insert($zno);
+        }
+        echo "End";
     }
 }

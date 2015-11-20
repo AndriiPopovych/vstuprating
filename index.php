@@ -1,5 +1,5 @@
 <?php
-error_reporting(2);
+error_reporting(3);
 session_start();
 function __autoload($className) {
     $classList = explode("\\", $className);
